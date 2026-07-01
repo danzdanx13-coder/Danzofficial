@@ -9,49 +9,41 @@ exports.handler = async function(event, context) {
     return { statusCode: 200, headers, body: '' };
   }
 
-  const SYSTEM_PROMPT = `Kamu adalah Damz AI, asisten AI yang cerdas, ramah, dan helpful. 
-Kamu berbicara dalam bahasa Indonesia secara default, tapi bisa menyesuaikan dengan bahasa yang digunakan pengguna.
-Kamu selalu memberikan jawaban yang informatif, jelas, dan mudah dipahami.
-Kepribadianmu: santai tapi profesional, suka bercanda tapi tetap membantu, dan selalu antusias dalam menjawab pertanyaan.
-Perkenalkan dirimu sebagai "Damz AI" jika ditanya.`;
+  const SYSTEM_PROMPT = `Kamu adalah Damz AI. Jawab singkat, padat, dan langsung ke inti.
+Gunakan bahasa Indonesia kecuali pengguna pakai bahasa lain.
+Jangan bertele-tele, jangan ulang pertanyaan, jangan basa-basi panjang.
+Pertanyaan simpel jawab 1-3 kalimat. Perkenalkan dirimu sebagai "Damz AI" jika ditanya.`;
 
   try {
     const { messages } = JSON.parse(event.body);
-    const groqMessages = [{ role: 'system', content: SYSTEM_PROMPT }, ...messages];
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const geminiContents = messages.map(msg => ({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.content }]
+    }));
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.API_KEY}`;
+
+    const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + process.env.API_KEY
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: groqMessages,
-        max_tokens: 2048,
-        temperature: 0.8
+        contents: geminiContents,
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        generationConfig: { maxOutputTokens: 2048, temperature: 0.7 }
       })
     });
 
     const data = await response.json();
 
     if (data.error) {
-      return { statusCode: 200, headers, body: JSON.stringify({ error: data.error }) };
+      return { statusCode: 200, headers, body: JSON.stringify({ error: { message: data.error.message } }) };
     }
 
-    const reply = data.choices?.[0]?.message?.content || 'Maaf, tidak bisa merespons.';
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ content: [{ text: reply }] })
-    };
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, tidak bisa merespons.';
+    return { statusCode: 200, headers, body: JSON.stringify({ content: [{ text: reply }] }) };
 
   } catch (err) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: err.message })
-    };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: { message: err.message } }) };
   }
 };
