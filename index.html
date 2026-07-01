@@ -43,34 +43,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
 @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:0.4}40%{transform:translateY(-8px);opacity:1}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-@keyframes spin{to{transform:rotate(360deg)}}
 .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
 .orb1{top:-15%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.15) 0%,transparent 70%)}
 .orb2{bottom:-15%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(79,70,229,0.12) 0%,transparent 70%)}
-
-/* ===== SCREEN OVERLAY ===== */
-.screen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
-.screen.hidden{display:none}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;animation:fadeIn 0.4s ease;backdrop-filter:blur(20px);box-shadow:var(--shadow)}
-.card-icon{font-size:52px;margin-bottom:16px}
-.card-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:var(--text);margin-bottom:8px}
-.card-sub{color:var(--text2);font-size:13px;line-height:1.7;margin-bottom:24px}
-.field-label{display:block;text-align:left;color:var(--text2);font-size:12px;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
-.field-input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:14px;transition:border-color 0.2s}
-.field-input:focus{border-color:rgba(124,58,237,0.6)}
-.field-input::placeholder{color:var(--text3)}
-.btn-primary{width:100%;background:linear-gradient(135deg,#7C3AED,#4F46E5);border:none;border-radius:12px;padding:14px;color:#fff;font-size:15px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;box-shadow:0 4px 15px rgba(124,58,237,0.35);transition:opacity 0.2s}
-.btn-primary:hover{opacity:0.9}
-.avatar-pick{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
-.av-opt{width:52px;height:52px;border-radius:50%;font-size:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:3px solid transparent;background:var(--surface2);transition:all 0.2s}
-.av-opt.selected{border-color:#7C3AED;box-shadow:0 0 0 2px rgba(124,58,237,0.3)}
-.link-btn{background:none;border:none;color:#A78BFA;font-size:13px;cursor:pointer;margin-top:12px;font-family:'Inter',sans-serif}
-.link-btn:hover{text-decoration:underline}
-
-/* ===== CHAT WRAP ===== */
 .chat-wrap{width:100%;max-width:720px;height:90vh;display:flex;flex-direction:column;background:var(--surface);border-radius:24px;border:1px solid var(--border);backdrop-filter:blur(20px);box-shadow:var(--shadow);overflow:hidden;position:relative;z-index:1;transition:all 0.3s}
-
-/* ===== HEADER ===== */
 .header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--header);flex-shrink:0}
 .hdr-left{display:flex;align-items:center;gap:12px}
 .hdr-av{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(124,58,237,0.4)}
@@ -80,14 +56,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
 .dot-live{width:6px;height:6px;border-radius:50%;background:#22C55E;animation:pulse 2s ease infinite}
 .status-txt{font-size:11px;color:var(--text2)}
 .hdr-right{display:flex;align-items:center;gap:6px}
-.user-chip{display:flex;align-items:center;gap:6px;background:var(--btn-sm);border:1px solid var(--border);border-radius:20px;padding:5px 10px;cursor:pointer;transition:all 0.2s}
-.user-chip:hover{border-color:rgba(124,58,237,0.3)}
-.user-chip-av{font-size:14px}
-.user-chip-name{font-size:12px;color:var(--text);font-weight:500;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .icon-btn{width:34px;height:34px;border-radius:10px;background:var(--btn-sm);border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all 0.2s}
 .icon-btn:hover{color:var(--text);border-color:rgba(124,58,237,0.3)}
-
-/* ===== MESSAGES ===== */
 .messages{flex:1;overflow-y:auto;padding:20px 18px 8px}
 .welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;animation:fadeIn 0.5s ease;text-align:center}
 .w-icon{width:68px;height:68px;border-radius:18px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 28px rgba(124,58,237,0.4)}
@@ -118,18 +88,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
 .td:nth-child(3){animation:bounce 1.2s ease-in-out 0.4s infinite}
 .err-msg{text-align:center;color:#F87171;font-size:13px;padding:11px 16px;background:rgba(239,68,68,0.08);border-radius:12px;border:1px solid rgba(239,68,68,0.2);margin-bottom:12px;animation:fadeIn 0.3s ease}
 .limit-msg{text-align:center;padding:20px 24px;background:rgba(124,58,237,0.08);border-radius:16px;border:1px solid rgba(124,58,237,0.2);margin:10px 0;animation:fadeIn 0.3s ease}
-.limit-msg .limit-icon{font-size:32px;margin-bottom:8px}
-.limit-msg .limit-title{font-weight:700;color:var(--text);font-size:15px;margin-bottom:4px}
-.limit-msg .limit-sub{color:var(--text2);font-size:13px}
-.limit-msg .limit-time{color:#A78BFA;font-weight:600;font-size:14px;margin-top:6px}
-
-/* ===== IMAGE PREVIEW ===== */
+.limit-icon{font-size:32px;margin-bottom:8px}
+.limit-title{font-weight:700;color:var(--text);font-size:15px;margin-bottom:4px}
+.limit-sub{color:var(--text2);font-size:13px}
+.limit-time{color:#A78BFA;font-weight:600;font-size:14px;margin-top:6px}
 .img-preview-wrap{padding:8px 18px 0;display:none}
 .img-preview-inner{position:relative;display:inline-block}
 .img-preview{width:70px;height:70px;object-fit:cover;border-radius:10px;border:2px solid rgba(124,58,237,0.4)}
 .img-remove{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#EF4444;border:none;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-
-/* ===== INPUT AREA ===== */
 .input-area{padding:12px 18px 14px;border-top:1px solid var(--border);background:var(--header);flex-shrink:0}
 .input-box{display:flex;align-items:flex-end;gap:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:16px;padding:9px 12px;transition:border-color 0.2s}
 .input-box:focus-within{border-color:rgba(124,58,237,0.5)}
@@ -145,11 +111,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
 .counter{font-size:11px;color:var(--text2);text-align:right;margin-top:6px}
 .counter.warn{color:#F59E0B}
 .counter.danger{color:#EF4444}
-
-/* ===== SETTINGS PANEL ===== */
 .settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn 0.2s ease}
 .settings-overlay.hidden{display:none}
-.settings-panel{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:24px 20px;width:100%;max-width:720px;backdrop-filter:blur(20px);animation:slideUp 0.3s ease}
+.settings-panel{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:24px 20px;width:100%;max-width:720px;backdrop-filter:blur(20px)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .settings-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
 .settings-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--text);margin-bottom:20px}
@@ -163,68 +127,32 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
 .toggle.on::after{left:23px}
 .settings-close{width:100%;background:var(--btn-sm);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;cursor:pointer;margin-top:16px;transition:all 0.2s}
 .settings-close:hover{border-color:rgba(124,58,237,0.3)}
-
-@media(max-width:480px){.chat-wrap{height:100vh;border-radius:0}body{padding:0}.card{border-radius:20px}}
+@media(max-width:480px){.chat-wrap{height:100vh;border-radius:0}body{padding:0}}
 </style>
 </head>
 <body>
-
-<!-- BG ORBS -->
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 
-<!-- ===== LOGIN SCREEN ===== -->
-<div class="screen" id="loginScreen">
-  <div class="card">
-    <div class="card-icon">⚡</div>
-    <div class="card-title">Selamat datang di Damz AI</div>
-    <div class="card-sub">Pilih avatar dan masukkan namamu untuk mulai ngobrol.</div>
-    <div class="avatar-pick" id="avatarPick">
-      <div class="av-opt selected" data-av="😊" onclick="pickAvatar(this)">😊</div>
-      <div class="av-opt" data-av="🧑" onclick="pickAvatar(this)">🧑</div>
-      <div class="av-opt" data-av="👩" onclick="pickAvatar(this)">👩</div>
-      <div class="av-opt" data-av="🧒" onclick="pickAvatar(this)">🧒</div>
-      <div class="av-opt" data-av="🦊" onclick="pickAvatar(this)">🦊</div>
-      <div class="av-opt" data-av="🐼" onclick="pickAvatar(this)">🐼</div>
-      <div class="av-opt" data-av="🤖" onclick="pickAvatar(this)">🤖</div>
-      <div class="av-opt" data-av="👾" onclick="pickAvatar(this)">👾</div>
-    </div>
-    <label class="field-label">Nama kamu</label>
-    <input class="field-input" id="nameInput" type="text" placeholder="Masukkan nama..." maxlength="20" onkeydown="if(event.key==='Enter')doLogin()"/>
-    <button class="btn-primary" onclick="doLogin()">⚡ Mulai Chat</button>
-  </div>
-</div>
-
-<!-- ===== SETTINGS PANEL ===== -->
+<!-- SETTINGS -->
 <div class="settings-overlay hidden" id="settingsOverlay" onclick="closeSettings(event)">
   <div class="settings-panel">
     <div class="settings-handle"></div>
     <div class="settings-title">⚙️ Pengaturan</div>
-
     <div class="setting-item">
       <div>
         <div class="setting-label">☀️ Mode Terang</div>
-        <div class="setting-sub">Ganti tampilan gelap/terang</div>
+        <div class="setting-sub">Ganti tampilan gelap / terang</div>
       </div>
       <button class="toggle" id="themeToggle" onclick="toggleTheme()"></button>
     </div>
-
     <div class="setting-item">
       <div>
-        <div class="setting-label">👤 Profil</div>
-        <div class="setting-sub">Nama: <span id="profileName">-</span></div>
-      </div>
-      <button class="settings-close" style="width:auto;padding:6px 14px;margin:0;font-size:12px" onclick="resetLogin()">Ganti</button>
-    </div>
-
-    <div class="setting-item">
-      <div>
-        <div class="setting-label">💬 Riwayat Chat</div>
+        <div class="setting-label">💬 Hapus Riwayat</div>
         <div class="setting-sub">Hapus semua histori percakapan</div>
       </div>
       <button class="settings-close" style="width:auto;padding:6px 14px;margin:0;font-size:12px;color:#F87171;border-color:rgba(239,68,68,0.3)" onclick="clearChat()">Hapus</button>
     </div>
-
     <div class="setting-item">
       <div>
         <div class="setting-label">📥 Export Chat</div>
@@ -232,13 +160,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
       </div>
       <button class="settings-close" style="width:auto;padding:6px 14px;margin:0;font-size:12px" onclick="exportChat()">Export</button>
     </div>
-
     <button class="settings-close" onclick="closeSettingsBtn()">Tutup</button>
   </div>
 </div>
 
-<!-- ===== CHAT ===== -->
-<div class="chat-wrap" id="chatWrap">
+<!-- CHAT -->
+<div class="chat-wrap">
   <div class="header">
     <div class="hdr-left">
       <div class="hdr-av">⚡</div>
@@ -251,10 +178,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
       </div>
     </div>
     <div class="hdr-right">
-      <div class="user-chip" onclick="openSettings()">
-        <span class="user-chip-av" id="chipAv">😊</span>
-        <span class="user-chip-name" id="chipName">Kamu</span>
-      </div>
       <button class="icon-btn" onclick="openSettings()" title="Pengaturan">⚙️</button>
     </div>
   </div>
@@ -272,11 +195,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
         <button class="sug-btn" onclick="sug('Bantu saya belajar Python')">Belajar Python</button>
         <button class="sug-btn" onclick="sug('Ide konten untuk kreator')">Ide konten</button>
         <button class="sug-btn" onclick="sug('Ceritakan lelucon lucu')">Lelucon lucu</button>
+        <button class="sug-btn" onclick="sug('Cara membuat website sederhana')">Buat website</button>
       </div>
     </div>
   </div>
 
-  <!-- Image Preview -->
   <div class="img-preview-wrap" id="imgPreviewWrap">
     <div class="img-preview-inner">
       <img id="imgPreview" class="img-preview" src="" alt="preview"/>
@@ -288,10 +211,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
     <div class="input-box">
       <textarea id="inp" rows="1" placeholder="Ketik pesanmu..." onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
       <div class="input-btns">
-        <button class="inp-btn" id="micBtn" onclick="toggleVoice()" title="Voice note">🎤</button>
+        <button class="inp-btn" id="micBtn" onclick="toggleVoice()" title="Voice input">🎤</button>
         <label class="inp-btn" title="Upload foto" style="cursor:pointer">
-          📷
-          <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="handleImage(event)"/>
+          📷<input type="file" id="imgInput" accept="image/*" style="display:none" onchange="handleImage(event)"/>
         </label>
         <button class="send-btn" id="sendBtn" onclick="send()">➤</button>
       </div>
@@ -302,31 +224,100 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;displa
 </div>
 
 <script>
-// ===== KONSTANTA =====
-const DAILY_LIMIT = 50; // max pesan per hari
-const RESET_HOUR = 0;   // jam reset (0 = tengah malam)
-const STORAGE = {
-  history: 'damz_history',
-  theme: 'damz_theme',
-  user: 'damz_user',
-  usage: 'damz_usage'
-};
+const DAILY_LIMIT = 50;
+const RESET_HOUR = 0;
+const STORAGE = { history:'damz_history', theme:'damz_theme', usage:'damz_usage' };
 
-let chatHistory = [];
-let isLoading = false;
-let selectedAvatar = '😊';
-let currentUser = null;
-let pendingImage = null; // { base64, mime_type, previewUrl }
-let recognition = null;
-let isRecording = false;
+let chatHistory = [], isLoading = false, pendingImage = null;
+let recognition = null, isRecording = false;
 
-// ===== LOGIN =====
-function pickAvatar(el) {
-  document.querySelectorAll('.av-opt').forEach(e => e.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedAvatar = el.dataset.av;
+// ===== USAGE LIMIT =====
+function getUsage(){
+  try{
+    const s=JSON.parse(localStorage.getItem(STORAGE.usage)||'{}');
+    const today=new Date().toDateString();
+    if(s.date!==today)return{date:today,count:0};
+    return s;
+  }catch(e){return{date:new Date().toDateString(),count:0}}
+}
+function incUsage(){const u=getUsage();u.count++;localStorage.setItem(STORAGE.usage,JSON.stringify(u))}
+function isLimitReached(){return getUsage().count>=DAILY_LIMIT}
+function getResetTime(){
+  const now=new Date(),reset=new Date();
+  reset.setDate(now.getDate()+1);reset.setHours(RESET_HOUR,0,0,0);
+  const diff=reset-now,h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
+  return h>0?`${h} jam ${m} menit lagi`:`${m} menit lagi`;
+}
+function getResetClock(){
+  const reset=new Date();reset.setDate(reset.getDate()+1);reset.setHours(RESET_HOUR,0,0,0);
+  return reset.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+}
+function updateCounter(){
+  const left=DAILY_LIMIT-getUsage().count;
+  const el=document.getElementById('counter');
+  if(left<=0){el.textContent='⛔ Batas harian tercapai';el.className='counter danger'}
+  else if(left<=10){el.textContent=`⚠️ Sisa ${left} pesan hari ini`;el.className='counter warn'}
+  else{el.textContent=`💬 ${left} pesan tersisa hari ini`;el.className='counter'}
+}
+function showLimitMessage(){
+  if(document.getElementById('limitMsg'))return;
+  const w=document.getElementById('welcome');if(w)w.remove();
+  const c=document.getElementById('msgs');
+  const div=document.createElement('div');div.className='limit-msg';div.id='limitMsg';
+  div.innerHTML=`<div class="limit-icon">🚫</div><div class="limit-title">Batas pesan harian tercapai</div><div class="limit-sub">Kamu sudah menggunakan ${DAILY_LIMIT} pesan hari ini.</div><div class="limit-time">🔄 Reset otomatis pukul ${getResetClock()} (${getResetTime()})</div>`;
+  c.appendChild(div);scrollBot();
 }
 
-function doLogin() {
-  const name = document.getElementById('nameInput').value.trim();
-  if (!name) { document.getElementById('
+// ===== THEME =====
+function applyTheme(t){
+  const tog=document.getElementById('themeToggle');
+  if(t==='light'){document.body.classList.add('light');tog.classList.add('on')}
+  else{document.body.classList.remove('light');tog.classList.remove('on')}
+}
+function toggleTheme(){
+  const isLight=document.body.classList.contains('light');
+  const t=isLight?'dark':'light';
+  applyTheme(t);localStorage.setItem(STORAGE.theme,t);
+}
+
+// ===== SETTINGS =====
+function openSettings(){document.getElementById('settingsOverlay').classList.remove('hidden')}
+function closeSettings(e){if(e.target===document.getElementById('settingsOverlay'))closeSettingsBtn()}
+function closeSettingsBtn(){document.getElementById('settingsOverlay').classList.add('hidden')}
+
+// ===== CHAT HELPERS =====
+function resize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px'}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}
+function sug(t){document.getElementById('inp').value=t;resize(document.getElementById('inp'));document.getElementById('inp').focus()}
+function scrollBot(){const m=document.getElementById('msgs');m.scrollTop=m.scrollHeight}
+
+function addMsg(role,content,imgUrl=null,doScroll=true){
+  const w=document.getElementById('welcome');if(w)w.remove();
+  const limitMsg=document.getElementById('limitMsg');if(limitMsg)limitMsg.remove();
+  const c=document.getElementById('msgs');
+  const row=document.createElement('div');row.className='msg-row'+(role==='user'?' user':'');
+  if(role==='assistant'){const av=document.createElement('div');av.className='msg-av bot-av';av.textContent='⚡';row.appendChild(av)}
+  const mc=document.createElement('div');mc.className='msg-content';
+  const bubble=document.createElement('div');bubble.className='bubble '+(role==='user'?'user':'bot');
+  if(imgUrl){
+    const img=document.createElement('img');img.src=imgUrl;bubble.appendChild(img);
+    if(content){const txt=document.createElement('div');txt.style.marginTop='6px';txt.textContent=content;bubble.appendChild(txt)}
+  }else{bubble.textContent=content}
+  mc.appendChild(bubble);
+  if(role==='assistant'){
+    const acts=document.createElement('div');acts.className='bubble-actions';
+    const cb=document.createElement('button');cb.className='act-btn';cb.textContent='📋 Salin';
+    cb.onclick=()=>{navigator.clipboard.writeText(content).then(()=>{cb.textContent='✓ Tersalin!';setTimeout(()=>cb.textContent='📋 Salin',1500)})};
+    acts.appendChild(cb);mc.appendChild(acts);
+  }
+  row.appendChild(mc);
+  if(role==='user'){const av=document.createElement('div');av.className='msg-av usr-av';av.textContent='👤';row.appendChild(av)}
+  c.appendChild(row);if(doScroll)scrollBot();
+}
+function showTyping(){
+  const w=document.getElementById('welcome');if(w)w.remove();
+  const c=document.getElementById('msgs');
+  const row=document.createElement('div');row.className='typing-row';row.id='typing';
+  const av=document.createElement('div');av.className='msg-av bot-av';av.textContent='⚡';row.appendChild(av);
+  const b=document.createElement('div');b.className='typing-bub';
+  b.innerHTML='<div class="t
