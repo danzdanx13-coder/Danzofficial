@@ -1,160 +1,332 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Damz AI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0D0A1E 0%, #130D2E 50%, #0D0A1E 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 2px; }
-    @keyframes bounce { 0%,80%,100%{transform:translateY(0);opacity:0.4} 40%{transform:translateY(-8px);opacity:1} }
-    @keyframes fadeSlideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
-    .orb-1{top:-15%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.15) 0%,transparent 70%)}
-    .orb-2{bottom:-15%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(79,70,229,0.12) 0%,transparent 70%)}
-    .chat-container{width:100%;max-width:720px;height:90vh;display:flex;flex-direction:column;background:rgba(255,255,255,0.03);border-radius:24px;border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px);box-shadow:0 25px 60px rgba(0,0,0,0.5);overflow:hidden;position:relative;z-index:1}
-    .header{padding:18px 24px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.2)}
-    .header-left{display:flex;align-items:center;gap:14px}
-    .avatar{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 15px rgba(124,58,237,0.5)}
-    .bot-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:#fff}
-    .bot-name span{color:#A78BFA}
-    .status{display:flex;align-items:center;gap:6px;margin-top:2px}
-    .status-dot{width:7px;height:7px;border-radius:50%;background:#22C55E;animation:pulse 2s ease infinite}
-    .status-text{font-size:12px;color:rgba(255,255,255,0.5)}
-    .clear-btn{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:rgba(255,255,255,0.5);padding:8px 14px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all 0.2s}
-    .clear-btn:hover{color:#fff;background:rgba(255,255,255,0.12)}
-    .messages{flex:1;overflow-y:auto;padding:24px 24px 8px}
-    .welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;animation:fadeSlideIn 0.5s ease}
-    .welcome-icon{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 8px 30px rgba(124,58,237,0.4)}
-    .welcome-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;color:#fff;text-align:center;margin-bottom:6px}
-    .welcome-sub{color:rgba(255,255,255,0.45);font-size:14px;line-height:1.6;text-align:center;max-width:360px}
-    .suggestions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
-    .suggestion-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.35);border-radius:20px;color:#C4B5FD;padding:8px 14px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;transition:all 0.2s}
-    .suggestion-btn:hover{background:rgba(124,58,237,0.3)}
-    .message-row{display:flex;margin-bottom:16px;animation:fadeSlideIn 0.3s ease}
-    .message-row.user{justify-content:flex-end}
-    .msg-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-    .msg-avatar.bot-av{background:linear-gradient(135deg,#7C3AED,#4F46E5);margin-right:10px;box-shadow:0 2px 8px rgba(124,58,237,0.35)}
-    .msg-avatar.user-av{background:rgba(255,255,255,0.15);margin-left:10px}
-    .bubble{max-width:72%;padding:12px 16px;font-size:14px;line-height:1.6;color:#fff;white-space:pre-wrap;word-break:break-word}
-    .bubble.bot{border-radius:18px 18px 18px 4px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1)}
-    .bubble.user{border-radius:18px 18px 4px 18px;background:linear-gradient(135deg,#7C3AED,#4F46E5)}
-    .typing-row{display:flex;align-items:center;gap:10px;animation:fadeSlideIn 0.3s ease;margin-bottom:16px}
-    .typing-bubble{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:18px 18px 18px 4px;padding:12px 16px;display:flex;gap:6px;align-items:center}
-    .dot{width:8px;height:8px;border-radius:50%;background:#7C3AED}
-    .dot:nth-child(1){animation:bounce 1.2s ease-in-out 0s infinite}
-    .dot:nth-child(2){animation:bounce 1.2s ease-in-out 0.2s infinite}
-    .dot:nth-child(3){animation:bounce 1.2s ease-in-out 0.4s infinite}
-    .error-msg{text-align:center;color:#F87171;font-size:13px;padding:12px 16px;background:rgba(239,68,68,0.1);border-radius:12px;border:1px solid rgba(239,68,68,0.2);margin-top:8px}
-    .input-area{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.2)}
-    .input-box{display:flex;align-items:flex-end;gap:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:10px 14px;transition:border-color 0.2s}
-    .input-box:focus-within{border-color:rgba(124,58,237,0.5)}
-    #userInput{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;line-height:1.6;resize:none;max-height:120px;overflow-y:auto}
-    #userInput::placeholder{color:rgba(255,255,255,0.3)}
-    .send-btn{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#7C3AED,#4F46E5);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 12px rgba(124,58,237,0.4);flex-shrink:0}
-    .send-btn:disabled{background:rgba(124,58,237,0.3);box-shadow:none;cursor:not-allowed}
-    .input-hint{text-align:center;margin-top:10px;font-size:11px;color:rgba(255,255,255,0.2)}
-    @media(max-width:480px){.chat-container{height:100vh;border-radius:0}body{padding:0}}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Damz AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:linear-gradient(135deg,#0D0A1E 0%,#130D2E 100%);
+  --surface:rgba(255,255,255,0.04);
+  --surface2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);
+  --text:#fff;
+  --text2:rgba(255,255,255,0.5);
+  --text3:rgba(255,255,255,0.25);
+  --header:rgba(0,0,0,0.25);
+  --input-bg:rgba(255,255,255,0.06);
+  --bubble-bot:rgba(255,255,255,0.07);
+  --bubble-bot-border:rgba(255,255,255,0.1);
+  --btn-sm:rgba(255,255,255,0.08);
+  --shadow:0 25px 60px rgba(0,0,0,0.5);
+}
+body.light{
+  --bg:linear-gradient(135deg,#F0EEFF 0%,#E4DEFF 100%);
+  --surface:rgba(255,255,255,0.85);
+  --surface2:rgba(124,58,237,0.06);
+  --border:rgba(124,58,237,0.12);
+  --text:#1A0A3D;
+  --text2:rgba(26,10,61,0.55);
+  --text3:rgba(26,10,61,0.25);
+  --header:rgba(255,255,255,0.6);
+  --input-bg:rgba(255,255,255,0.8);
+  --bubble-bot:rgba(124,58,237,0.06);
+  --bubble-bot-border:rgba(124,58,237,0.15);
+  --btn-sm:rgba(124,58,237,0.08);
+  --shadow:0 25px 60px rgba(124,58,237,0.12);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;transition:background 0.3s}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.4);border-radius:2px}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:0.4}40%{transform:translateY(-8px);opacity:1}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.orb1{top:-15%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.15) 0%,transparent 70%)}
+.orb2{bottom:-15%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(79,70,229,0.12) 0%,transparent 70%)}
+
+/* ===== SCREEN OVERLAY ===== */
+.screen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+.screen.hidden{display:none}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:36px 28px;max-width:400px;width:100%;text-align:center;animation:fadeIn 0.4s ease;backdrop-filter:blur(20px);box-shadow:var(--shadow)}
+.card-icon{font-size:52px;margin-bottom:16px}
+.card-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:var(--text);margin-bottom:8px}
+.card-sub{color:var(--text2);font-size:13px;line-height:1.7;margin-bottom:24px}
+.field-label{display:block;text-align:left;color:var(--text2);font-size:12px;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.field-input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:14px;transition:border-color 0.2s}
+.field-input:focus{border-color:rgba(124,58,237,0.6)}
+.field-input::placeholder{color:var(--text3)}
+.btn-primary{width:100%;background:linear-gradient(135deg,#7C3AED,#4F46E5);border:none;border-radius:12px;padding:14px;color:#fff;font-size:15px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;box-shadow:0 4px 15px rgba(124,58,237,0.35);transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+.avatar-pick{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.av-opt{width:52px;height:52px;border-radius:50%;font-size:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:3px solid transparent;background:var(--surface2);transition:all 0.2s}
+.av-opt.selected{border-color:#7C3AED;box-shadow:0 0 0 2px rgba(124,58,237,0.3)}
+.link-btn{background:none;border:none;color:#A78BFA;font-size:13px;cursor:pointer;margin-top:12px;font-family:'Inter',sans-serif}
+.link-btn:hover{text-decoration:underline}
+
+/* ===== CHAT WRAP ===== */
+.chat-wrap{width:100%;max-width:720px;height:90vh;display:flex;flex-direction:column;background:var(--surface);border-radius:24px;border:1px solid var(--border);backdrop-filter:blur(20px);box-shadow:var(--shadow);overflow:hidden;position:relative;z-index:1;transition:all 0.3s}
+
+/* ===== HEADER ===== */
+.header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--header);flex-shrink:0}
+.hdr-left{display:flex;align-items:center;gap:12px}
+.hdr-av{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(124,58,237,0.4)}
+.bot-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--text)}
+.bot-name span{color:#A78BFA}
+.status{display:flex;align-items:center;gap:5px;margin-top:1px}
+.dot-live{width:6px;height:6px;border-radius:50%;background:#22C55E;animation:pulse 2s ease infinite}
+.status-txt{font-size:11px;color:var(--text2)}
+.hdr-right{display:flex;align-items:center;gap:6px}
+.user-chip{display:flex;align-items:center;gap:6px;background:var(--btn-sm);border:1px solid var(--border);border-radius:20px;padding:5px 10px;cursor:pointer;transition:all 0.2s}
+.user-chip:hover{border-color:rgba(124,58,237,0.3)}
+.user-chip-av{font-size:14px}
+.user-chip-name{font-size:12px;color:var(--text);font-weight:500;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.icon-btn{width:34px;height:34px;border-radius:10px;background:var(--btn-sm);border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all 0.2s}
+.icon-btn:hover{color:var(--text);border-color:rgba(124,58,237,0.3)}
+
+/* ===== MESSAGES ===== */
+.messages{flex:1;overflow-y:auto;padding:20px 18px 8px}
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;animation:fadeIn 0.5s ease;text-align:center}
+.w-icon{width:68px;height:68px;border-radius:18px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 28px rgba(124,58,237,0.4)}
+.w-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:var(--text);margin-bottom:4px}
+.w-sub{color:var(--text2);font-size:13px;line-height:1.6;max-width:340px}
+.suggestions{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:6px}
+.sug-btn{background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);border-radius:18px;color:#C4B5FD;padding:7px 13px;cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all 0.2s}
+.sug-btn:hover{background:rgba(124,58,237,0.25)}
+.msg-row{display:flex;margin-bottom:20px;animation:fadeIn 0.3s ease;align-items:flex-end;gap:8px}
+.msg-row.user{justify-content:flex-end}
+.msg-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.msg-av.bot-av{background:linear-gradient(135deg,#7C3AED,#4F46E5);box-shadow:0 2px 8px rgba(124,58,237,0.3)}
+.msg-av.usr-av{background:var(--surface2);border:1px solid var(--border)}
+.msg-content{display:flex;flex-direction:column;max-width:72%;gap:4px}
+.msg-row.user .msg-content{align-items:flex-end}
+.bubble{padding:11px 15px;font-size:14px;line-height:1.65;color:var(--text);white-space:pre-wrap;word-break:break-word}
+.bubble.bot{border-radius:4px 18px 18px 18px;background:var(--bubble-bot);border:1px solid var(--bubble-bot-border)}
+.bubble.user{border-radius:18px 4px 18px 18px;background:linear-gradient(135deg,#7C3AED,#4F46E5);color:#fff}
+.bubble img{max-width:100%;border-radius:10px;margin-top:6px;display:block}
+.bubble-actions{display:flex;gap:6px;padding:0 4px}
+.act-btn{background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:all 0.2s;font-family:'Inter',sans-serif}
+.act-btn:hover{color:#A78BFA;background:rgba(124,58,237,0.1)}
+.typing-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:20px;animation:fadeIn 0.3s ease}
+.typing-bub{background:var(--bubble-bot);border:1px solid var(--bubble-bot-border);border-radius:4px 18px 18px 18px;padding:14px 16px;display:flex;gap:5px;align-items:center}
+.td{width:7px;height:7px;border-radius:50%;background:#7C3AED}
+.td:nth-child(1){animation:bounce 1.2s ease-in-out 0s infinite}
+.td:nth-child(2){animation:bounce 1.2s ease-in-out 0.2s infinite}
+.td:nth-child(3){animation:bounce 1.2s ease-in-out 0.4s infinite}
+.err-msg{text-align:center;color:#F87171;font-size:13px;padding:11px 16px;background:rgba(239,68,68,0.08);border-radius:12px;border:1px solid rgba(239,68,68,0.2);margin-bottom:12px;animation:fadeIn 0.3s ease}
+.limit-msg{text-align:center;padding:20px 24px;background:rgba(124,58,237,0.08);border-radius:16px;border:1px solid rgba(124,58,237,0.2);margin:10px 0;animation:fadeIn 0.3s ease}
+.limit-msg .limit-icon{font-size:32px;margin-bottom:8px}
+.limit-msg .limit-title{font-weight:700;color:var(--text);font-size:15px;margin-bottom:4px}
+.limit-msg .limit-sub{color:var(--text2);font-size:13px}
+.limit-msg .limit-time{color:#A78BFA;font-weight:600;font-size:14px;margin-top:6px}
+
+/* ===== IMAGE PREVIEW ===== */
+.img-preview-wrap{padding:8px 18px 0;display:none}
+.img-preview-inner{position:relative;display:inline-block}
+.img-preview{width:70px;height:70px;object-fit:cover;border-radius:10px;border:2px solid rgba(124,58,237,0.4)}
+.img-remove{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#EF4444;border:none;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* ===== INPUT AREA ===== */
+.input-area{padding:12px 18px 14px;border-top:1px solid var(--border);background:var(--header);flex-shrink:0}
+.input-box{display:flex;align-items:flex-end;gap:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:16px;padding:9px 12px;transition:border-color 0.2s}
+.input-box:focus-within{border-color:rgba(124,58,237,0.5)}
+#inp{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;line-height:1.6;resize:none;max-height:100px;overflow-y:auto}
+#inp::placeholder{color:var(--text3)}
+.input-btns{display:flex;gap:6px;align-items:flex-end;flex-shrink:0}
+.inp-btn{width:34px;height:34px;border-radius:9px;background:transparent;border:1px solid transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.2s}
+.inp-btn:hover{background:var(--btn-sm);color:var(--text);border-color:var(--border)}
+.inp-btn.recording{background:rgba(239,68,68,0.15);color:#EF4444;border-color:rgba(239,68,68,0.3);animation:pulse 1s ease infinite}
+.send-btn{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#7C3AED,#4F46E5);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 3px 10px rgba(124,58,237,0.35);transition:opacity 0.2s;flex-shrink:0}
+.send-btn:disabled{opacity:0.4;cursor:not-allowed}
+.hint{text-align:center;margin-top:8px;font-size:10px;color:var(--text3)}
+.counter{font-size:11px;color:var(--text2);text-align:right;margin-top:6px}
+.counter.warn{color:#F59E0B}
+.counter.danger{color:#EF4444}
+
+/* ===== SETTINGS PANEL ===== */
+.settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn 0.2s ease}
+.settings-overlay.hidden{display:none}
+.settings-panel{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:24px 20px;width:100%;max-width:720px;backdrop-filter:blur(20px);animation:slideUp 0.3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.settings-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.settings-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--text);margin-bottom:20px}
+.setting-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.setting-item:last-child{border-bottom:none}
+.setting-label{font-size:14px;color:var(--text);font-weight:500}
+.setting-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.toggle{width:44px;height:24px;border-radius:12px;background:rgba(255,255,255,0.1);border:none;cursor:pointer;position:relative;transition:background 0.3s;flex-shrink:0}
+.toggle.on{background:linear-gradient(135deg,#7C3AED,#4F46E5)}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left 0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.toggle.on::after{left:23px}
+.settings-close{width:100%;background:var(--btn-sm);border:1px solid var(--border);border-radius:12px;padding:12px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;cursor:pointer;margin-top:16px;transition:all 0.2s}
+.settings-close:hover{border-color:rgba(124,58,237,0.3)}
+
+@media(max-width:480px){.chat-wrap{height:100vh;border-radius:0}body{padding:0}.card{border-radius:20px}}
+</style>
 </head>
 <body>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="chat-container">
-    <div class="header">
-      <div class="header-left">
-        <div class="avatar">⚡</div>
-        <div>
-          <div class="bot-name">Damz <span>AI</span></div>
-          <div class="status">
-            <div class="status-dot"></div>
-            <span class="status-text">Online & siap membantu</span>
-          </div>
-        </div>
-      </div>
-      <button class="clear-btn" onclick="clearChat()">🗑 Bersihkan</button>
+
+<!-- BG ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="screen" id="loginScreen">
+  <div class="card">
+    <div class="card-icon">⚡</div>
+    <div class="card-title">Selamat datang di Damz AI</div>
+    <div class="card-sub">Pilih avatar dan masukkan namamu untuk mulai ngobrol.</div>
+    <div class="avatar-pick" id="avatarPick">
+      <div class="av-opt selected" data-av="😊" onclick="pickAvatar(this)">😊</div>
+      <div class="av-opt" data-av="🧑" onclick="pickAvatar(this)">🧑</div>
+      <div class="av-opt" data-av="👩" onclick="pickAvatar(this)">👩</div>
+      <div class="av-opt" data-av="🧒" onclick="pickAvatar(this)">🧒</div>
+      <div class="av-opt" data-av="🦊" onclick="pickAvatar(this)">🦊</div>
+      <div class="av-opt" data-av="🐼" onclick="pickAvatar(this)">🐼</div>
+      <div class="av-opt" data-av="🤖" onclick="pickAvatar(this)">🤖</div>
+      <div class="av-opt" data-av="👾" onclick="pickAvatar(this)">👾</div>
     </div>
-    <div class="messages" id="messages">
-      <div class="welcome" id="welcome">
-        <div class="welcome-icon">⚡</div>
-        <div>
-          <div class="welcome-title">Halo! Aku Damz AI 👋</div>
-          <div class="welcome-sub">Tanyakan apa saja — pengetahuan umum, coding, ide kreatif, atau sekadar ngobrol santai!</div>
-        </div>
-        <div class="suggestions">
-          <button class="suggestion-btn" onclick="useSuggestion('Siapa kamu?')">Siapa kamu?</button>
-          <button class="suggestion-btn" onclick="useSuggestion('Ceritakan sesuatu yang menarik')">Ceritakan sesuatu yang menarik</button>
-          <button class="suggestion-btn" onclick="useSuggestion('Bantu saya belajar Python')">Bantu saya belajar Python</button>
-          <button class="suggestion-btn" onclick="useSuggestion('Beri ide konten kreator')">Beri ide konten kreator</button>
+    <label class="field-label">Nama kamu</label>
+    <input class="field-input" id="nameInput" type="text" placeholder="Masukkan nama..." maxlength="20" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="btn-primary" onclick="doLogin()">⚡ Mulai Chat</button>
+  </div>
+</div>
+
+<!-- ===== SETTINGS PANEL ===== -->
+<div class="settings-overlay hidden" id="settingsOverlay" onclick="closeSettings(event)">
+  <div class="settings-panel">
+    <div class="settings-handle"></div>
+    <div class="settings-title">⚙️ Pengaturan</div>
+
+    <div class="setting-item">
+      <div>
+        <div class="setting-label">☀️ Mode Terang</div>
+        <div class="setting-sub">Ganti tampilan gelap/terang</div>
+      </div>
+      <button class="toggle" id="themeToggle" onclick="toggleTheme()"></button>
+    </div>
+
+    <div class="setting-item">
+      <div>
+        <div class="setting-label">👤 Profil</div>
+        <div class="setting-sub">Nama: <span id="profileName">-</span></div>
+      </div>
+      <button class="settings-close" style="width:auto;padding:6px 14px;margin:0;font-size:12px" onclick="resetLogin()">Ganti</button>
+    </div>
+
+    <div class="setting-item">
+      <div>
+        <div class="setting-label">💬 Riwayat Chat</div>
+        <div class="setting-sub">Hapus semua histori percakapan</div>
+      </div>
+      <button class="settings-close" style="width:auto;padding:6px 14px;margin:0;font-size:12px;color:#F87171;border-color:rgba(239,68,68,0.3)" onclick="clearChat()">Hapus</button>
+    </div>
+
+    <div class="setting-item">
+      <div>
+        <div class="setting-label">📥 Export Chat</div>
+        <div class="setting-sub">Download riwayat sebagai file .txt</div>
+      </div>
+      <button class="settings-close" style="width:auto;padding:6px 14px;margin:0;font-size:12px" onclick="exportChat()">Export</button>
+    </div>
+
+    <button class="settings-close" onclick="closeSettingsBtn()">Tutup</button>
+  </div>
+</div>
+
+<!-- ===== CHAT ===== -->
+<div class="chat-wrap" id="chatWrap">
+  <div class="header">
+    <div class="hdr-left">
+      <div class="hdr-av">⚡</div>
+      <div>
+        <div class="bot-name">Damz <span>AI</span></div>
+        <div class="status">
+          <div class="dot-live"></div>
+          <span class="status-txt">Online & siap membantu</span>
         </div>
       </div>
     </div>
-    <div class="input-area">
-      <div class="input-box">
-        <textarea id="userInput" rows="1" placeholder="Ketik pesanmu di sini..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+    <div class="hdr-right">
+      <div class="user-chip" onclick="openSettings()">
+        <span class="user-chip-av" id="chipAv">😊</span>
+        <span class="user-chip-name" id="chipName">Kamu</span>
       </div>
-      <div class="input-hint">Tekan Enter untuk kirim · Shift+Enter untuk baris baru</div>
+      <button class="icon-btn" onclick="openSettings()" title="Pengaturan">⚙️</button>
     </div>
   </div>
-  <script>
-    let chatHistory = [];
-    let isLoading = false;
-    function autoResize(el){el.style.height="auto";el.style.height=Math.min(el.scrollHeight,120)+"px"}
-    function handleKey(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}}
-    function useSuggestion(text){document.getElementById("userInput").value=text;autoResize(document.getElementById("userInput"));document.getElementById("userInput").focus()}
-    function scrollToBottom(){const msgs=document.getElementById("messages");msgs.scrollTop=msgs.scrollHeight}
-    function appendMessage(role,content){
-      const welcome=document.getElementById("welcome");if(welcome)welcome.remove();
-      const container=document.getElementById("messages");
-      const row=document.createElement("div");row.className="message-row "+(role==="user"?"user":"bot");
-      if(role==="assistant"){const av=document.createElement("div");av.className="msg-avatar bot-av";av.textContent="⚡";row.appendChild(av)}
-      const bubble=document.createElement("div");bubble.className="bubble "+(role==="user"?"user":"bot");bubble.textContent=content;row.appendChild(bubble);
-      if(role==="user"){const av=document.createElement("div");av.className="msg-avatar user-av";av.textContent="👤";row.appendChild(av)}
-      container.appendChild(row);scrollToBottom()
-    }
-    function showTyping(){
-      const welcome=document.getElementById("welcome");if(welcome)welcome.remove();
-      const container=document.getElementById("messages");
-      const row=document.createElement("div");row.className="typing-row";row.id="typingIndicator";
-      const av=document.createElement("div");av.className="msg-avatar bot-av";av.textContent="⚡";row.appendChild(av);
-      const bubble=document.createElement("div");bubble.className="typing-bubble";bubble.innerHTML='<div class="dot"></div><div class="dot"></div><div class="dot"></div>';row.appendChild(bubble);
-      container.appendChild(row);scrollToBottom()
-    }
-    function hideTyping(){const t=document.getElementById("typingIndicator");if(t)t.remove()}
-    function showError(msg){
-      const container=document.getElementById("messages");
-      const div=document.createElement("div");div.className="error-msg";div.textContent=msg;
-      container.appendChild(div);scrollToBottom();setTimeout(()=>div.remove(),6000)
-    }
-    function clearChat(){
-      chatHistory=[];
-      const container=document.getElementById("messages");container.innerHTML="";
-      const welcome=document.createElement("div");welcome.className="welcome";welcome.id="welcome";
-      welcome.innerHTML=`<div class="welcome-icon">⚡</div><div><div class="welcome-title">Halo! Aku Damz AI 👋</div><div class="welcome-sub">Tanyakan apa saja — pengetahuan umum, coding, ide kreatif, atau sekadar ngobrol santai!</div></div><div class="suggestions"><button class="suggestion-btn" onclick="useSuggestion('Siapa kamu?')">Siapa kamu?</button><button class="suggestion-btn" onclick="useSuggestion('Ceritakan sesuatu yang menarik')">Ceritakan sesuatu yang menarik</button><button class="suggestion-btn" onclick="useSuggestion('Bantu saya belajar Python')">Bantu saya belajar Python</button><button class="suggestion-btn" onclick="useSuggestion('Beri ide konten kreator')">Beri ide konten kreator</button></div>`;
-      container.appendChild(welcome)
-    }
-    async function sendMessage(){
-      if(isLoading)return;
-      const input=document.getElementById("userInput");
-      const text=input.value.trim();if(!text)return;
-      isLoading=true;input.value="";input.style.height="auto";
-      document.getElementById("sendBtn").disabled=true;
-      chatHistory.push({role:"user",content:text});
-      appendMessage("user",text);showTyping();
-      try{
-        const response=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:chatHistory})});
-        const data=await response.json();
-        if(data.error){hideTyping();showError("Error: "+(data.error.message||data.error));chatHistory.pop();return}
-        const reply=data.content?.map(b=>b.text||"").join("")||"Maaf, tidak bisa merespons saat ini.";
-        chatHistory.push({role:"assistant",content:reply});hideTyping();appendMessage("assistant",reply)
-      }catch(err){hideTyping();showError("❌ Gagal terhubung. Coba lagi!");chatHistory.pop()}
-      finally{isLoading=false;document.getElementById("sendBtn").disabled=false;input.focus()}
-    }
-  </script>
-</body>
-</html>
+
+  <div class="messages" id="msgs">
+    <div class="welcome" id="welcome">
+      <div class="w-icon">⚡</div>
+      <div>
+        <div class="w-title">Halo! Aku Damz AI 👋</div>
+        <div class="w-sub">Tanyakan apa saja — pengetahuan umum, coding, ide kreatif, atau sekadar ngobrol santai!</div>
+      </div>
+      <div class="suggestions">
+        <button class="sug-btn" onclick="sug('Siapa kamu?')">Siapa kamu?</button>
+        <button class="sug-btn" onclick="sug('Fakta unik yang menarik')">Fakta unik</button>
+        <button class="sug-btn" onclick="sug('Bantu saya belajar Python')">Belajar Python</button>
+        <button class="sug-btn" onclick="sug('Ide konten untuk kreator')">Ide konten</button>
+        <button class="sug-btn" onclick="sug('Ceritakan lelucon lucu')">Lelucon lucu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Preview -->
+  <div class="img-preview-wrap" id="imgPreviewWrap">
+    <div class="img-preview-inner">
+      <img id="imgPreview" class="img-preview" src="" alt="preview"/>
+      <button class="img-remove" onclick="removeImage()">✕</button>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-box">
+      <textarea id="inp" rows="1" placeholder="Ketik pesanmu..." onkeydown="handleKey(event)" oninput="resize(this)"></textarea>
+      <div class="input-btns">
+        <button class="inp-btn" id="micBtn" onclick="toggleVoice()" title="Voice note">🎤</button>
+        <label class="inp-btn" title="Upload foto" style="cursor:pointer">
+          📷
+          <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="handleImage(event)"/>
+        </label>
+        <button class="send-btn" id="sendBtn" onclick="send()">➤</button>
+      </div>
+    </div>
+    <div class="counter" id="counter"></div>
+    <div class="hint">Enter kirim · Shift+Enter baris baru</div>
+  </div>
+</div>
+
+<script>
+// ===== KONSTANTA =====
+const DAILY_LIMIT = 50; // max pesan per hari
+const RESET_HOUR = 0;   // jam reset (0 = tengah malam)
+const STORAGE = {
+  history: 'damz_history',
+  theme: 'damz_theme',
+  user: 'damz_user',
+  usage: 'damz_usage'
+};
+
+let chatHistory = [];
+let isLoading = false;
+let selectedAvatar = '😊';
+let currentUser = null;
+let pendingImage = null; // { base64, mime_type, previewUrl }
+let recognition = null;
+let isRecording = false;
+
+// ===== LOGIN =====
+function pickAvatar(el) {
+  document.querySelectorAll('.av-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAvatar = el.dataset.av;
+}
+
+function doLogin() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) { document.getElementById('
